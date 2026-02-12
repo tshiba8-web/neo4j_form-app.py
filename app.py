@@ -14,40 +14,37 @@ with tab_user:
 
     title = st.text_input("タイトル")
     description = st.text_area("詳細")
-    environment = st.text_input("使用環境")
-    program = st.text_input("プログラム")
 
     st.divider()
-    st.subheader("関連付けたいノード")
+    st.subheader("関連付け")
 
-    label = st.selectbox(
-        "ラベル選択",
-        ["Problem", "Cause", "Action", "Explanation", "Request"]
-    )
+    def relation_selector(label):
+        st.markdown(f"### {label}")
+        keyword = st.text_input(f"{label} 検索", key=label)
 
-    keyword = st.text_input("キーワード検索")
+        # ★後でNeo4j検索結果に変わる
+        dummy = [f"{label}_001", f"{label}_002", f"{label}_003"]
 
-    # ★ここは後でNeo4j検索結果に置き換える
-    dummy_candidates = [
-        f"{label}_001",
-        f"{label}_002",
-        f"{label}_003",
-    ]
+        return st.multiselect("候補", dummy, key=f"select_{label}")
 
-    selected = st.multiselect("候補", dummy_candidates)
+    problems = relation_selector("Problem")
+    causes = relation_selector("Cause")
+    actions = relation_selector("Action")
+    explanations = relation_selector("Explanation")
+    requests = relation_selector("Request")
 
     if st.button("登録依頼"):
-        st.success("以下の内容で登録依頼します")
+        st.success("登録依頼内容")
         st.json({
             "title": title,
             "description": description,
-            "environment": environment,
-            "program": program,
-            "relations": {
-                "label": label,
-                "targets": selected
-            }
+            "ABOUT": problems,
+            "CAUSED_BY": causes,
+            "RESOLVED_BY": actions,
+            "EXPLAINED_BY": explanations,
+            "REQUESTS": requests
         })
+
 
 
 # ==================================================
