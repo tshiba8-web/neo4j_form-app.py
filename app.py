@@ -181,14 +181,69 @@ def admin_create_node():
         st.success("ノード作成（仮）")
 
 
-def admin_create_relation():
-    st.subheader("リレーション作成")
+def admin_relation_section():
+    st.subheader("リレーション登録（最大3件）")
 
-    from_key = st.text_input("FROM Key", key="a_from")
-    to_key = st.text_input("TO Key", key="a_to")
+    for i in range(3):
+        st.markdown(f"## Relation {i+1}")
 
-    if st.button("作成", key="a_rel_submit"):
-        st.success("リレーション作成（仮）")
+        # =====================
+        # FROM
+        # =====================
+        st.markdown("### FROM")
+
+        from_label = st.selectbox(
+            "ラベル",
+            list(KEY_SAMPLE.keys()),
+            key=f"a_from_label_{i}"
+        )
+
+        from_keyword = st.text_input(
+            "検索ワード",
+            key=f"a_from_kw_{i}"
+        )
+
+        if st.button("検索", key=f"a_from_search_{i}"):
+            st.info("ここでNeo4j検索（将来実装）")
+
+        from_key = st.selectbox(
+            "候補",
+            KEY_SAMPLE[from_label],
+            key=f"a_from_key_{i}"
+        )
+
+        st.markdown("---")
+
+        # =====================
+        # TO
+        # =====================
+        st.markdown("### TO")
+
+        to_label = st.selectbox(
+            "ラベル",
+            list(KEY_SAMPLE.keys()),
+            key=f"a_to_label_{i}"
+        )
+
+        to_keyword = st.text_input(
+            "検索ワード",
+            key=f"a_to_kw_{i}"
+        )
+
+        if st.button("検索", key=f"a_to_search_{i}"):
+            st.info("ここでNeo4j検索（将来実装）")
+
+        to_key = st.selectbox(
+            "候補",
+            KEY_SAMPLE[to_label],
+            key=f"a_to_key_{i}"
+        )
+
+        st.markdown("=======")
+
+    if st.button("リレーション登録", key="a_rel_submit"):
+        st.success("登録（仮）")
+
 
 
 def admin_tab():
