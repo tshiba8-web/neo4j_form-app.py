@@ -254,10 +254,11 @@ def admin_tab():
         ["ノード作成", "リレーション作成"]
     )
 
-    if menu == "ノード作成":
-        admin_create_node()
-    else:
-        admin_create_relation()
+if menu == "ノード作成":
+    admin_create_node()
+else:
+    admin_relation_section()
+
 
 # =========================================
 # グラフ
