@@ -40,31 +40,44 @@ def user_register_question_and_relation():
     program = st.selectbox("プログラム", PROGRAM_OPTIONS, key="u_q_program")
 
     st.markdown("---")
-    st.markdown("### 関連ノード（最大3件）")
+    st.markdown("### リレーション指定（最大3件）")
 
-    relations = []
+    st.info("FROM / TO を選択してください")
+
     for i in range(3):
         st.markdown(f"#### Relation {i+1}")
 
-        from_key = st.text_input(f"FROM Key", key=f"u_from_{i}")
+        col1, col2 = st.columns(2)
 
-        label = st.selectbox(
-            "TO ラベル",
-            list(KEY_SAMPLE.keys()),
-            key=f"u_label_{i}"
-        )
+        with col1:
+            from_label = st.selectbox(
+                "FROM ラベル",
+                ["Question"] + list(KEY_SAMPLE.keys()),
+                key=f"u_from_label_{i}"
+            )
 
-        # 本来は検索結果をここに出す
-        to_key = st.selectbox(
-            "TO Key（検索結果）",
-            KEY_SAMPLE[label],
-            key=f"u_to_{i}"
-        )
+            from_key = st.selectbox(
+                "FROM Key（検索結果）",
+                KEY_SAMPLE.get(from_label, ["Q_NEW"]),
+                key=f"u_from_key_{i}"
+            )
 
-        relations.append((from_key, label, to_key))
+        with col2:
+            to_label = st.selectbox(
+                "TO ラベル",
+                list(KEY_SAMPLE.keys()),
+                key=f"u_to_label_{i}"
+            )
+
+            to_key = st.selectbox(
+                "TO Key（検索結果）",
+                KEY_SAMPLE[to_label],
+                key=f"u_to_key_{i}"
+            )
 
     if st.button("登録", key="u_submit"):
         st.success("登録リクエスト送信（仮）")
+
 
 
 def user_request_node():
