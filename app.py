@@ -1,158 +1,148 @@
 import streamlit as st
-st.set_page_config(layout="wide")
-st.title("ナレッジ管理システム")
 
-tab_user, tab_admin, tab_graph = st.tabs(
-    ["一般ユーザー", "管理者", "グラフ表示"]
-)
+# ==============================
+# 共通部品
+# ==============================
 
-# ==================================================
+def init_page():
+    st.set_page_config(page_title="Neo4j 登録フォーム", layout="wide")
+    st.title("Neo4j データ登録")
+
+# ==============================
 # 一般ユーザー
-# ==================================================
+# ==============================
 
-# =============================
-# 操作選択
-# =============================
-mode = st.radio(
-    "操作を選択してください",
-    ["Qを登録する", "ノードの登録を依頼する"]
-)
+def user_question_register():
+    st.subheader("質問（Q）を登録")
 
-st.divider()
+    title = st.text_input("タイトル", key="user_q_title")
+    description = st.text_area("詳細", key="user_q_desc")
 
-# ============================================================
-# Q 登録
-# ============================================================
-if mode == "Qを登録する":
-
-    st.header("質問（Question）登録")
-
-    title = st.text_input("タイトル")
-    description = st.text_area("詳細")
-
-    col1, col2 = st.columns(2)
-
-    with col1:
-        environment = st.selectbox(
-            "使用環境",
-            ["Windows11", "Windows10", "その他"]
-        )
-
-    with col2:
-        program = st.selectbox(
-            "プログラム",
-            ["ss7", "その他"]
-        )
-
-    st.subheader("関連付けたいノードを選択")
-
-    st.caption("検索して既存ノードを選択します（後でDB連携）")
-
-    problem = st.multiselect("Problem")
-    cause = st.multiselect("Cause")
-    action = st.multiselect("Action")
-    explanation = st.multiselect("Explanation")
-    request = st.multiselect("Request")
-
-    if st.button("登録"):
-        st.success("登録内容（ダミー）")
-        st.write({
-            "title": title,
-            "description": description,
-            "environment": environment,
-            "program": program,
-            "problem": problem,
-            "cause": cause,
-            "action": action,
-            "explanation": explanation,
-            "request": request
-        })
+    if st.button("登録", key="user_q_submit"):
+        st.success("質問登録（仮）完了")
 
 
-# ============================================================
-# 登録依頼
-# ============================================================
-elif mode == "ノードの登録を依頼する":
+def user_relation_register():
+    st.subheader("リレーションを登録")
 
-    st.header("新規ノード登録依頼")
+    q_key = st.text_input("質問Key", key="user_rel_q")
+    target_label = st.selectbox(
+        "紐付けたいラベル",
+        ["Problem", "Cause", "Action", "Explanation", "Request"],
+        key="user_rel_label"
+    )
+    target_key = st.text_input("対象ノードKey", key="user_rel_key")
+
+    if st.button("紐付け", key="user_rel_submit"):
+        st.success("リレーション登録（仮）完了")
+
+
+def user_request_register():
+    st.subheader("ノード追加依頼")
 
     label = st.selectbox(
-        "作成して欲しいラベル",
-        ["Problem", "Cause", "Action", "Explanation", "Request"]
+        "追加してほしいラベル",
+        ["Problem", "Cause", "Action", "Explanation", "Request"],
+        key="user_req_label"
+    )
+    title = st.text_input("タイトル", key="user_req_title")
+    description = st.text_area("詳細", key="user_req_desc")
+
+    if st.button("依頼送信", key="user_req_submit"):
+        st.success("依頼送信完了")
+
+
+def user_tab():
+    st.header("一般ユーザー")
+
+    menu = st.radio(
+        "作業を選択",
+        ["質問を登録", "リレーション作成", "ノード追加依頼"],
+        key="user_menu"
     )
 
-    title = st.text_input("タイトル")
-    description = st.text_area("詳細")
+    if menu == "質問を登録":
+        user_question_register()
 
-    if st.button("依頼を送信"):
-        st.success("依頼内容（ダミー）")
-        st.write({
-            "label": label,
-            "title": title,
-            "description": description
-        })
+    elif menu == "リレーション作成":
+        user_relation_register()
 
-# ==================================================
+    elif menu == "ノード追加依頼":
+        user_request_register()
+
+# ==============================
 # 管理者
-# ==================================================
-with tab_admin:
-    st.header("管理者メニュー")
+# ==============================
 
-    st.subheader("既存ノード検索")
-    search_label = st.selectbox(
+def admin_node_create():
+    st.subheader("ノード追加")
+
+    label = st.selectbox(
         "ラベル",
-        ["Question", "Problem", "Cause", "Action", "Explanation", "Request"]
-    )
-    search_word = st.text_input("検索ワード")
-
-    if st.button("検索"):
-        st.info("検索結果（ダミー）")
-        st.write([f"{search_label}_001", f"{search_label}_002"])
-
-    st.divider()
-    st.subheader("新規ノード作成")
-
-    create_label = st.selectbox(
-        "作成するラベル",
-        ["Problem", "Cause", "Action", "Explanation", "Request"]
+        ["Question", "Problem", "Cause", "Action", "Explanation", "Request"],
+        key="admin_label"
     )
 
-    st.text_input("タイトル")
-    st.text_area("詳細")
+    title = st.text_input("タイトル", key="admin_title")
+    description = st.text_area("詳細", key="admin_desc")
 
-    if create_label in ["Action", "Explanation"]:
-        st.text_input("入力項目")
-        st.text_input("出力項目")
-        st.text_input("参考")
+    if st.button("追加", key="admin_submit"):
+        st.success("ノード追加（仮）完了")
 
-    if create_label == "Request":
-        st.selectbox("対応状況", ["未対応", "対応中", "完了"])
 
-    if st.button("ノード作成"):
-        st.success("作成依頼を受け付けました")
-
-    st.divider()
+def admin_relation_create():
     st.subheader("リレーション作成")
 
-    st.text_input("元ノード key")
-    st.selectbox(
-        "リレーション",
-        ["ABOUT", "CAUSED_BY", "RESOLVED_BY", "EXPLAINED_BY", "REQUESTS"]
+    from_key = st.text_input("FROM Key", key="admin_from")
+    to_key = st.text_input("TO Key", key="admin_to")
+
+    if st.button("作成", key="admin_rel_submit"):
+        st.success("リレーション作成（仮）完了")
+
+
+def admin_tab():
+    st.header("管理者")
+
+    menu = st.radio(
+        "作業を選択",
+        ["ノード追加", "リレーション作成"],
+        key="admin_menu"
     )
-    st.text_input("接続先 key")
 
-    if st.button("リレーション登録"):
-        st.success("リレーション登録依頼を受け付けました")
+    if menu == "ノード追加":
+        admin_node_create()
 
+    elif menu == "リレーション作成":
+        admin_relation_create()
 
-# ==================================================
+# ==============================
 # グラフ表示
-# ==================================================
-with tab_graph:
+# ==============================
+
+def graph_tab():
     st.header("グラフ表示")
+    st.info("ここに将来グラフ描画が入ります")
 
-    key = st.text_input("question_key")
+# ==============================
+# メイン
+# ==============================
 
-    if st.button("表示"):
-        st.info("ここにグラフが表示されます（後でNeo4j連携）")
+def main():
+    init_page()
 
+    tab_user, tab_admin, tab_graph = st.tabs(
+        ["一般ユーザー", "管理者", "グラフ"]
+    )
+
+    with tab_user:
+        user_tab()
+
+    with tab_admin:
+        admin_tab()
+
+    with tab_graph:
+        graph_tab()
+
+
+if __name__ == "__main__":
+    main()
