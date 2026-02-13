@@ -1,5 +1,5 @@
 import streamlit as st
-
+st.set_page_config(layout="wide")
 st.title("ナレッジ管理システム")
 
 tab_user, tab_admin, tab_graph = st.tabs(
@@ -9,43 +9,88 @@ tab_user, tab_admin, tab_graph = st.tabs(
 # ==================================================
 # 一般ユーザー
 # ==================================================
-with tab_user:
-    st.header("質問登録")
+
+# =============================
+# 操作選択
+# =============================
+mode = st.radio(
+    "操作を選択してください",
+    ["Qを登録する", "ノードの登録を依頼する"]
+)
+
+st.divider()
+
+# ============================================================
+# Q 登録
+# ============================================================
+if mode == "Qを登録する":
+
+    st.header("質問（Question）登録")
 
     title = st.text_input("タイトル")
     description = st.text_area("詳細")
 
-    st.divider()
-    st.subheader("関連付け")
+    col1, col2 = st.columns(2)
 
-    def relation_selector(label):
-        st.markdown(f"### {label}")
-        keyword = st.text_input(f"{label} 検索", key=label)
+    with col1:
+        environment = st.selectbox(
+            "使用環境",
+            ["Windows11", "Windows10", "その他"]
+        )
 
-        # ★後でNeo4j検索結果に変わる
-        dummy = [f"{label}_001", f"{label}_002", f"{label}_003"]
+    with col2:
+        program = st.selectbox(
+            "プログラム",
+            ["ss7", "その他"]
+        )
 
-        return st.multiselect("候補", dummy, key=f"select_{label}")
+    st.subheader("関連付けたいノードを選択")
 
-    problems = relation_selector("Problem")
-    causes = relation_selector("Cause")
-    actions = relation_selector("Action")
-    explanations = relation_selector("Explanation")
-    requests = relation_selector("Request")
+    st.caption("検索して既存ノードを選択します（後でDB連携）")
 
-    if st.button("登録依頼"):
-        st.success("登録依頼内容")
-        st.json({
+    problem = st.multiselect("Problem")
+    cause = st.multiselect("Cause")
+    action = st.multiselect("Action")
+    explanation = st.multiselect("Explanation")
+    request = st.multiselect("Request")
+
+    if st.button("登録"):
+        st.success("登録内容（ダミー）")
+        st.write({
             "title": title,
             "description": description,
-            "ABOUT": problems,
-            "CAUSED_BY": causes,
-            "RESOLVED_BY": actions,
-            "EXPLAINED_BY": explanations,
-            "REQUESTS": requests
+            "environment": environment,
+            "program": program,
+            "problem": problem,
+            "cause": cause,
+            "action": action,
+            "explanation": explanation,
+            "request": request
         })
 
 
+# ============================================================
+# 登録依頼
+# ============================================================
+elif mode == "ノードの登録を依頼する":
+
+    st.header("新規ノード登録依頼")
+
+    label = st.selectbox(
+        "作成して欲しいラベル",
+        ["Problem", "Cause", "Action", "Explanation", "Request"]
+    )
+
+    title = st.text_input("タイトル")
+    description = st.text_area("詳細")
+
+    if st.button("依頼を送信"):
+        st.success("依頼内容（ダミー）")
+        st.write({
+            "label": label,
+            "title": title,
+            "description": description
+        })
 
 # ==================================================
 # 管理者
