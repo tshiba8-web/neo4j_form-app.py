@@ -119,6 +119,18 @@ def user_request_node():
     title = st.text_input("タイトル", key="u_req_title")
     description = st.text_area("詳細", key="u_req_desc")
 
+    # ラベル別追加項目
+    if label in ["Action", "Explanation"]:
+        st.text_input("入力項目", key="a_input")
+        st.text_input("出力項目", key="a_output")
+        st.text_input("参考", key="a_ref")
+
+    if label == "Request":
+        st.selectbox("対応状況", ["未対応", "対応中", "完了"], key="a_status")
+
+    if label == "Software":
+        st.text_input("name", key="a_name")
+    
     if st.button("依頼送信", key="u_req_submit"):
         st.success("依頼送信完了")
 
