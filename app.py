@@ -32,7 +32,9 @@ def init_page():
 def user_register_question_and_relation():
     st.subheader("質問 + リレーション登録")
 
-    # --- Question ---
+    # =====================
+    # Question
+    # =====================
     st.markdown("### 質問情報")
     title = st.text_input("タイトル", key="u_q_title")
     description = st.text_area("詳細", key="u_q_desc")
@@ -42,41 +44,66 @@ def user_register_question_and_relation():
     st.markdown("---")
     st.markdown("### リレーション指定（最大3件）")
 
-    st.info("FROM / TO を選択してください")
-
     for i in range(3):
-        st.markdown(f"#### Relation {i+1}")
+        st.markdown(f"## Relation {i+1}")
 
-        col1, col2 = st.columns(2)
+        # =====================
+        # FROM
+        # =====================
+        st.markdown("### FROM")
 
-        with col1:
-            from_label = st.selectbox(
-                "FROM ラベル",
-                ["Question"] + list(KEY_SAMPLE.keys()),
-                key=f"u_from_label_{i}"
-            )
+        from_label = st.selectbox(
+            "ラベル",
+            ["Question"] + list(KEY_SAMPLE.keys()),
+            key=f"u_from_label_{i}"
+        )
 
-            from_key = st.selectbox(
-                "FROM Key（検索結果）",
-                KEY_SAMPLE.get(from_label, ["Q_NEW"]),
-                key=f"u_from_key_{i}"
-            )
+        from_keyword = st.text_input(
+            "検索ワード",
+            key=f"u_from_kw_{i}"
+        )
 
-        with col2:
-            to_label = st.selectbox(
-                "TO ラベル",
-                list(KEY_SAMPLE.keys()),
-                key=f"u_to_label_{i}"
-            )
+        if st.button("検索", key=f"u_from_search_{i}"):
+            st.info("ここでNeo4j検索（将来実装）")
 
-            to_key = st.selectbox(
-                "TO Key（検索結果）",
-                KEY_SAMPLE[to_label],
-                key=f"u_to_key_{i}"
-            )
+        from_key = st.selectbox(
+            "候補",
+            KEY_SAMPLE.get(from_label, ["Q_NEW"]),
+            key=f"u_from_key_{i}"
+        )
+
+        st.markdown("---")
+
+        # =====================
+        # TO
+        # =====================
+        st.markdown("### TO")
+
+        to_label = st.selectbox(
+            "ラベル",
+            list(KEY_SAMPLE.keys()),
+            key=f"u_to_label_{i}"
+        )
+
+        to_keyword = st.text_input(
+            "検索ワード",
+            key=f"u_to_kw_{i}"
+        )
+
+        if st.button("検索", key=f"u_to_search_{i}"):
+            st.info("ここでNeo4j検索（将来実装）")
+
+        to_key = st.selectbox(
+            "候補",
+            KEY_SAMPLE[to_label],
+            key=f"u_to_key_{i}"
+        )
+
+        st.markdown("=======")
 
     if st.button("登録", key="u_submit"):
         st.success("登録リクエスト送信（仮）")
+
 
 
 
