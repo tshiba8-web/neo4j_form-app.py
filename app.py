@@ -157,7 +157,7 @@ def admin_create_node():
 
     label = st.selectbox(
         "ラベル",
-        ["Question", "Problem", "Cause", "Action", "Explanation", "Request", "Software"],
+        ["Problem", "Cause", "Action", "Explanation", "Request", "Software"],
         key="a_label"
     )
 
