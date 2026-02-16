@@ -21,7 +21,7 @@ KEY_SAMPLE = {
 # =========================================
 
 st.set_page_config(page_title="Neo4j Form", layout="wide")
-st.title("Neo4j データ登録フォーム")
+st.title("Neo4j データ登録フォーム最新版")
 
 # =========================================
 # 一般ユーザー
