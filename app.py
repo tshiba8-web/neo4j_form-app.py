@@ -1,8 +1,9 @@
 import streamlit as st
 
 # =========================================
-# 仮データ
+# 仮データ（あとでNeo4jから取得に変更）
 # =========================================
+
 ENV_OPTIONS = ["Windows11", "Windows10", "Linux"]
 PROGRAM_OPTIONS = ["ss7", "dify", "neo4j"]
 
@@ -18,6 +19,7 @@ KEY_SAMPLE = {
 # =========================================
 # 共通
 # =========================================
+
 st.set_page_config(page_title="Neo4j Form", layout="wide")
 st.title("Neo4j データ登録フォーム")
 
@@ -59,10 +61,12 @@ def user_tab():
 
         for i in range(3):
             with st.expander(f"Relation {i+1}", expanded=(i == 0)):
+
                 c1, c2 = st.columns(2)
 
                 # FROM
                 with c1:
+                    st.markdown("### FROM")
                     from_label = st.selectbox(
                         "ラベル",
                         ["Question"] + list(KEY_SAMPLE.keys()),
@@ -78,6 +82,7 @@ def user_tab():
 
                 # TO
                 with c2:
+                    st.markdown("### TO")
                     to_label = st.selectbox(
                         "ラベル",
                         list(KEY_SAMPLE.keys()),
@@ -115,7 +120,11 @@ def user_tab():
             st.text_input("参考", key="u_req_reference")
 
         if label == "Request":
-            st.selectbox("対応状況", ["未対応", "対応中", "完了"], key="u_req_status")
+            st.selectbox(
+                "対応状況",
+                ["未対応", "対応中", "完了"],
+                key="u_req_status"
+            )
 
         if label == "Software":
             st.text_input("name", key="u_req_name")
@@ -137,6 +146,9 @@ def admin_tab():
         horizontal=True
     )
 
+    # ===============================
+    # ノード作成
+    # ===============================
     if mode == "ノード作成":
         st.subheader("ノード作成")
 
@@ -155,27 +167,53 @@ def admin_tab():
             st.text_input("参考", key="a_reference")
 
         if label == "Request":
-            st.selectbox("対応状況", ["未対応", "対応中", "完了"], key="a_status")
+            st.selectbox(
+                "対応状況",
+                ["未対応", "対応中", "完了"],
+                key="a_status"
+            )
 
         if label == "Software":
             st.text_input("name", key="a_name")
 
         st.button("作成", key="a_submit")
 
+    # ===============================
+    # リレーション作成
+    # ===============================
     else:
         st.subheader("リレーション作成")
 
         for i in range(3):
             with st.expander(f"Relation {i+1}", expanded=(i == 0)):
-                st.selectbox("FROMラベル", list(KEY_SAMPLE.keys()), key=f"ad_from_l_{i}")
-                st.text_input("FROM検索", key=f"ad_from_k_{i}")
-                st.selectbox("FROM候補", ["sample"], key=f"ad_from_c_{i}")
 
-                st.selectbox("TOラベル", list(KEY_SAMPLE.keys()), key=f"ad_to_l_{i}")
-                st.text_input("TO検索", key=f"ad_to_k_{i}")
-                st.selectbox("TO候補", ["sample"], key=f"ad_to_c_{i}")
+                st.selectbox(
+                    "FROMラベル",
+                    list(KEY_SAMPLE.keys()),
+                    key=f"a_from_label_{i}"
+                )
+                st.text_input("FROM検索", key=f"a_from_kw_{i}")
+                st.button("検索", key=f"a_from_search_{i}")
+                st.selectbox(
+                    "FROM候補",
+                    ["sample"],
+                    key=f"a_from_candidate_{i}"
+                )
 
-        st.button("登録", key="ad_submit")
+                st.selectbox(
+                    "TOラベル",
+                    list(KEY_SAMPLE.keys()),
+                    key=f"a_to_label_{i}"
+                )
+                st.text_input("TO検索", key=f"a_to_kw_{i}")
+                st.button("検索", key=f"a_to_search_{i}")
+                st.selectbox(
+                    "TO候補",
+                    ["sample"],
+                    key=f"a_to_candidate_{i}"
+                )
+
+        st.button("登録", key="a_rel_submit")
 
 
 # =========================================
