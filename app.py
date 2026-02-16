@@ -118,7 +118,7 @@ def user_tab():
             ["Problem", "Cause", "Action", "Explanation", "Request", "Software"]
         )
 
-        st.text_input("タイトル")
+        st.text_input("タイトル", key="u_title")
         st.text_area("詳細")
 
         if label in ["Action", "Explanation"]:
@@ -155,7 +155,7 @@ def admin_tab():
             ["Problem", "Cause", "Action", "Explanation", "Request", "Software"]
         )
 
-        st.text_input("タイトル")
+        st.text_input("タイトル", key="a_title")
         st.text_area("詳細")
 
         if label in ["Action", "Explanation"]:
