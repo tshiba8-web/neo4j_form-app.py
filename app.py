@@ -122,15 +122,15 @@ def user_tab():
         st.text_area("詳細")
 
         if label in ["Action", "Explanation"]:
-            st.text_input("入力項目")
-            st.text_input("出力項目")
-            st.text_input("参考")
+            st.text_input("入力項目" key="u_input")
+            st.text_input("出力項目" key="u_output")
+            st.text_input("参考" key="u_reference")
 
         if label == "Request":
             st.selectbox("対応状況", ["未対応", "対応中", "完了"])
 
         if label == "Software":
-            st.text_input("name")
+            st.text_input("name" key="u_name")
 
         st.button("依頼送信")
 
@@ -159,15 +159,15 @@ def admin_tab():
         st.text_area("詳細")
 
         if label in ["Action", "Explanation"]:
-            st.text_input("入力項目")
-            st.text_input("出力項目")
-            st.text_input("参考")
+            st.text_input("入力項目" key="a_input")
+            st.text_input("出力項目" key="a_output")
+            st.text_input("参考" key="a_reference")
 
         if label == "Request":
             st.selectbox("対応状況", ["未対応", "対応中", "完了"])
 
         if label == "Software":
-            st.text_input("name")
+            st.text_input("name" key="a_name")
 
         st.button("作成")
 
